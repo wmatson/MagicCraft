@@ -6,11 +6,15 @@ public class Controller : MonoBehaviour {
 	public GameObject target;
 	public float force = 250;
 
-	private new ParticleSystem particleSystem;
+	private GameObject melee;
 
 	// Use this for initialization
 	void Start () {
-		particleSystem = target.gameObject.GetComponentInChildren<ParticleSystem> ();
+		foreach (Transform child in target.transform) {
+			if(child.name == "Melee") {
+				melee = child.gameObject;
+			}
+		}
 	}
 	
 	// Update is called once per frame
@@ -23,11 +27,13 @@ public class Controller : MonoBehaviour {
 		var attack = new Vector2 (-Input.GetAxis ("RightHorizontal"), Input.GetAxis ("RightVertical"));
 		if (attack.sqrMagnitude > 0) {
 			target.transform.rotation = Quaternion.AngleAxis (Mathf.Atan2 (attack.y, attack.x) * Mathf.Rad2Deg, Vector3.forward);
-			if (!particleSystem.isPlaying)
-				particleSystem.Play ();
+			if (!melee.activeSelf) {
+				melee.SetActive(true);
+			}
 		} else {
-			if(particleSystem.isPlaying)
-				particleSystem.Stop();
+			if(melee.activeSelf) {
+				melee.SetActive(false);
+			}
 		}
 	}
 
